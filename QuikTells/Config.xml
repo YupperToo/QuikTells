@@ -1,0 +1,14 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+   <Frame name="QuikTells_Config">
+        <Button name="Button_01" inherits="UIPanelButtonTemplate" text="Button #1">
+			<Size>
+				<AbsDimension x="50" y="23" />
+			</Size>
+			<Anchors>
+				<Anchor point="TOPLEFT">
+					<Offset x="10" y="10" />
+			</Anchor>
+			</Anchors>
+		</Button>
+   </Frame>
+</Ui>
