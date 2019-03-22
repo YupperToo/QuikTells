@@ -1,4 +1,4 @@
-﻿-- Author   		: Theodas
+-- Author   		: Theodas
 -- Last Modified By	: MasterZeus
 -- Addon			: QuikTells
 -- Create Date  	: 02.23.2012
@@ -94,7 +94,6 @@ function Button33_OnClick()
 end
 
 -- End Groups
-
 local open=0;
 function QuikTells_OnClick()
 if (open==0) then 
@@ -106,23 +105,67 @@ else
 end	
 end
 
-local function createDropdown(parentFrame, displayText, yCoord)
-	local dropDown = CreateFrame("Button", displayText, parentFrame, UIDropDownMenuTemplate)
-	dropDown:SetText(displayText)
-	dropDown:SetSize(30,100)
-	dropDown:SetPoint("TOPLEFT", panel, "TOPLEFT", 5, yCoord)
-	return dropDown
-end
-
+local favoriteNumber = 42
 function LoadQuikTells()
-	local panel = CreateFrame("Frame", "QuikTellsOptions", InterfaceOptionsFramePanelContainer)
-	panel.name = "QuikTells"
+	-- Create config screen
+	local configPanel = CreateFrame("Frame", "QuikTellsOptions", InterfaceOptionsFramePanelContainer)
+	configPanel.name = "QuikTells"
+	configPanel:Hide()
+	InterfaceOptions_AddCategory(configPanel)
 
-	createDropdown(panel, "Button1", 10)
-	createDropdown(panel, "Button2", 40)
-	createDropdown(panel, "Button3", 70)
-	createDropdown(panel, "Button4", 100)
+	-- Create title
+	local title = configPanel:CreateFontString("ARTWORK")
+	title:SetFontObject("GameFontNormalLarge")
+	title:SetPoint("TOPLEFT", configPanel, "TOPLEFT", 10, -15)
+	title:SetText("QuikTells")
 
-	InterfaceOptions_AddCategory(panel)
+	-- Create column headers
+
+	-- Create button name entry fields
+
+	-- Create text entry fields
+
+	-- Create left button click actions
+	createChannelDropdown(configPanel, 1, 100, -100)
+	createChannelDropdown(configPanel, 2, 100, -125)
+	createChannelDropdown(configPanel, 3, 100, -150)
+	createChannelDropdown(configPanel, 4, 100, -175)
+	createChannelDropdown(configPanel, 4, 100, -200)
+
+	-- Create right button click actions
+	createChannelDropdown(configPanel, 1, 200, -100)
+	createChannelDropdown(configPanel, 2, 200, -125)
+	createChannelDropdown(configPanel, 3, 200, -150)
+	createChannelDropdown(configPanel, 4, 200, -175)
+	createChannelDropdown(configPanel, 4, 200, -200)
+
+	-- Create custom action entry fields
 end
+
+local channelOptions = {"Say", "Yell", "Raid", "Custom"}
+function createChannelDropdown(parentFrame, buttonNumber, xCoord, yCoord)
+	local dropDown = CreateFrame("FRAME", "WPDemoDropDown", parentFrame, "UIDropDownMenuTemplate")
+	dropDown:SetPoint("TOPLEFT", parentFrame, "TOPLEFT", xCoord, yCoord)
+	UIDropDownMenu_SetWidth(dropDown, 75)
+	UIDropDownMenu_SetText(dropDown, "Say")
+	
+	-- Create and bind the initialization function to the dropdown menu
+	UIDropDownMenu_Initialize(dropDown, 
+	function(self, level, menuList)
+		local info = UIDropDownMenu_CreateInfo()
+		for i = 1, table.getn(channelOptions) do
+			info.text = channelOptions[i]
+			info.arg1 = buttonNumber
+			UIDropDownMenu_AddButton(info)
+		end
+	end)
+
+	function dropDown:SetValue(newValue)
+		UIDropDownMenu_SetText(dropDown, newValue)
+		CloseDropDownMenus()
+	end
+end
+
+
+
 
