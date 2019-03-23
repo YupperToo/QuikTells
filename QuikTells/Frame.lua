@@ -1,4 +1,4 @@
--- Author   		: Theodas
+﻿-- Author   		: Theodas
 -- Last Modified By	: MasterZeus
 -- Addon			: QuikTells
 -- Create Date  	: 02.23.2012
@@ -138,30 +138,60 @@ function LoadQuikTells()
 	createChannelDropdown(configPanel, 3, 200, -150)
 	createChannelDropdown(configPanel, 4, 200, -175)
 	createChannelDropdown(configPanel, 4, 200, -200)
-
-	-- Create custom action entry fields
 end
 
-local channelOptions = {"Say", "Yell", "Raid", "Custom"}
+local channelOptions = {"Say", "Yell", "Raid", "Emote", "Custom"}
+local emoteOptions = {"Dance", "Salute"}
+local customOptions = {"Pull"}
+
 function createChannelDropdown(parentFrame, buttonNumber, xCoord, yCoord)
 	local dropDown = CreateFrame("FRAME", "WPDemoDropDown", parentFrame, "UIDropDownMenuTemplate")
 	dropDown:SetPoint("TOPLEFT", parentFrame, "TOPLEFT", xCoord, yCoord)
 	UIDropDownMenu_SetWidth(dropDown, 75)
-	UIDropDownMenu_SetText(dropDown, "Say")
+	UIDropDownMenu_SetText(dropDown, "Say") -- TODO: Get saved value to display here
 	
 	-- Create and bind the initialization function to the dropdown menu
 	UIDropDownMenu_Initialize(dropDown, 
 	function(self, level, menuList)
 		local info = UIDropDownMenu_CreateInfo()
-		for i = 1, table.getn(channelOptions) do
-			info.text = channelOptions[i]
-			info.arg1 = buttonNumber
-			UIDropDownMenu_AddButton(info)
+
+		if (level == 1) then
+			for i = 1, table.getn(channelOptions) do
+				info.text = channelOptions[i]
+				info.arg1 = buttonNumber
+				info.menuList = channelOptions[i]
+
+				if (channelOptions[i] == "Emote" or channelOptions[i] == "Custom") then
+					info.hasArrow = true
+				else
+					info.func = self.SetValue
+				end
+
+				UIDropDownMenu_AddButton(info)
+			end
+		else 
+			if (menuList == "Emote") then 
+				for i = 1, table.getn(emoteOptions) do
+					info.text = emoteOptions[i]
+					info.arg1 = buttonNumber	
+					info.func = self.SetValue
+					UIDropDownMenu_AddButton(info, level)
+				end
+			else 
+				if (menuList == "Custom") then
+					for i = 1, table.getn(customOptions) do
+						info.text = customOptions[i]
+						info.arg1 = buttonNumber	
+						info.func = self.SetValue
+						UIDropDownMenu_AddButton(info, level)
+					end
+				end
+			end
 		end
 	end)
 
 	function dropDown:SetValue(newValue)
-		UIDropDownMenu_SetText(dropDown, newValue)
+		UIDropDownMenu_SetText(dropDown, newValue) -- TODO: Save the choosen value
 		CloseDropDownMenus()
 	end
 end
