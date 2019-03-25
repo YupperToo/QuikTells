@@ -121,6 +121,8 @@ function LoadQuikTells()
 
 	-- Create column headers
 
+	-- Create enabled on/off check boxes
+
 	-- Create button name entry fields
 
 	-- Create text entry fields
@@ -195,7 +197,3 @@ function createChannelDropdown(parentFrame, buttonNumber, xCoord, yCoord)
 		CloseDropDownMenus()
 	end
 end
-
-
-
-
