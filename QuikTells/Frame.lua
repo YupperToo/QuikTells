@@ -141,8 +141,8 @@ function LoadQuikTells()
 end
 
 local channelOptions = {"Say", "Yell", "Raid", "Emote", "Custom"}
-local emoteOptions = {"Dance", "Salute"}
-local customOptions = {"Pull"}
+local emoteOptions = {"Emote Dance", "Emote Salute"}
+local customOptions = {"DMB Pull"}
 
 function createChannelDropdown(parentFrame, buttonNumber, xCoord, yCoord)
 	local dropDown = CreateFrame("FRAME", "WPDemoDropDown", parentFrame, "UIDropDownMenuTemplate")
@@ -158,7 +158,7 @@ function createChannelDropdown(parentFrame, buttonNumber, xCoord, yCoord)
 		if (level == 1) then
 			for i = 1, table.getn(channelOptions) do
 				info.text = channelOptions[i]
-				info.arg1 = buttonNumber
+				info.arg1 = channelOptions[i]
 				info.menuList = channelOptions[i]
 
 				if (channelOptions[i] == "Emote" or channelOptions[i] == "Custom") then
@@ -173,7 +173,7 @@ function createChannelDropdown(parentFrame, buttonNumber, xCoord, yCoord)
 			if (menuList == "Emote") then 
 				for i = 1, table.getn(emoteOptions) do
 					info.text = emoteOptions[i]
-					info.arg1 = buttonNumber	
+					info.arg1 = emoteOptions[i]	
 					info.func = self.SetValue
 					UIDropDownMenu_AddButton(info, level)
 				end
@@ -181,7 +181,7 @@ function createChannelDropdown(parentFrame, buttonNumber, xCoord, yCoord)
 				if (menuList == "Custom") then
 					for i = 1, table.getn(customOptions) do
 						info.text = customOptions[i]
-						info.arg1 = buttonNumber	
+						info.arg1 = customOptions[i]	
 						info.func = self.SetValue
 						UIDropDownMenu_AddButton(info, level)
 					end
