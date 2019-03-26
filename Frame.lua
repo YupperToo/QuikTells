@@ -105,7 +105,8 @@ else
 end	
 end
 
-local favoriteNumber = 42
+local xCoords = {20, 70, 200, 325, 450}
+local yCoords = {-75, -100, -125, -150, -175, -200, -225, -250, -275, -300, -325, -350}
 function LoadQuikTells()
 	-- Create config screen
 	local configPanel = CreateFrame("Frame", "QuikTellsOptions", InterfaceOptionsFramePanelContainer)
@@ -120,26 +121,32 @@ function LoadQuikTells()
 	title:SetText("QuikTells")
 
 	-- Create column headers
+	createColumnHeaderLabel(configPanel, "Show", xCoords[1])
+	createColumnHeaderLabel(configPanel, "Name", xCoords[2])
+	createColumnHeaderLabel(configPanel, "Text", xCoords[3])
+	createColumnHeaderLabel(configPanel, "Left Click Action", xCoords[4] + 25) -- add 25 to line up correctly
+	createColumnHeaderLabel(configPanel, "Right Click Action", xCoords[5] + 25) -- add 25 to line up correctly
 
-	-- Create enabled on/off check boxes
+	for i = 1, table.getn(yCoords) do
+		-- Create enabled on/off check boxes
 
-	-- Create button name entry fields
+		-- Create button name entry fields
 
-	-- Create text entry fields
+		-- Create text entry fields
 
-	-- Create left button click actions
-	createChannelDropdown(configPanel, 1, 100, -100)
-	createChannelDropdown(configPanel, 2, 100, -125)
-	createChannelDropdown(configPanel, 3, 100, -150)
-	createChannelDropdown(configPanel, 4, 100, -175)
-	createChannelDropdown(configPanel, 4, 100, -200)
+		-- Create left button click actions
+		createChannelDropdown(configPanel, i, xCoords[4], yCoords[i])
 
-	-- Create right button click actions
-	createChannelDropdown(configPanel, 1, 200, -100)
-	createChannelDropdown(configPanel, 2, 200, -125)
-	createChannelDropdown(configPanel, 3, 200, -150)
-	createChannelDropdown(configPanel, 4, 200, -175)
-	createChannelDropdown(configPanel, 4, 200, -200)
+		-- Create right button click actions
+		createChannelDropdown(configPanel, i, xCoords[5], yCoords[i])
+	end
+end
+
+function createColumnHeaderLabel(parentFrame, name, xCoord)
+	local header = parentFrame:CreateFontString("ARTWORK")
+	header:SetPoint("TOPLEFT", parentFrame, "TOPLEFT", xCoord, -50)
+	header:SetFontObject("GameFontNormal")
+	header:SetText(name)
 end
 
 local channelOptions = {"Say", "Yell", "Raid", "Emote", "Custom"}
@@ -149,7 +156,7 @@ local customOptions = {"DMB Pull"}
 function createChannelDropdown(parentFrame, buttonNumber, xCoord, yCoord)
 	local dropDown = CreateFrame("FRAME", "WPDemoDropDown", parentFrame, "UIDropDownMenuTemplate")
 	dropDown:SetPoint("TOPLEFT", parentFrame, "TOPLEFT", xCoord, yCoord)
-	UIDropDownMenu_SetWidth(dropDown, 75)
+	UIDropDownMenu_SetWidth(dropDown, 100)
 	UIDropDownMenu_SetText(dropDown, "Say") -- TODO: Get saved value to display here
 	
 	-- Create and bind the initialization function to the dropdown menu
