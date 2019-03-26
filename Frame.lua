@@ -96,18 +96,23 @@ end
 -- End Groups
 local open=0;
 function QuikTells_OnClick()
-if (open==0) then 
-	TellButtons:Hide();
-	open=1;
-else
-	TellButtons:Show();
-	open=0;
-end	
+	if (open==0) then 
+		TellButtons:Hide();
+		open=1;
+	else
+		TellButtons:Show();
+		open=0;
+	end	
+end
+
+function LoadQuikTells()
+	QuikTells_OnClick()
+	LoadConfigPanel()
 end
 
 local xCoords = {20, 70, 200, 325, 450}
 local yCoords = {-75, -100, -125, -150, -175, -200, -225, -250, -275, -300, -325, -350}
-function LoadQuikTells()
+function LoadConfigPanel()
 	-- Create config screen
 	local configPanel = CreateFrame("Frame", "QuikTellsOptions", InterfaceOptionsFramePanelContainer)
 	configPanel.name = "QuikTells"
@@ -121,11 +126,11 @@ function LoadQuikTells()
 	title:SetText("QuikTells")
 
 	-- Create column headers
-	createColumnHeaderLabel(configPanel, "Show", xCoords[1])
-	createColumnHeaderLabel(configPanel, "Name", xCoords[2])
-	createColumnHeaderLabel(configPanel, "Text", xCoords[3])
-	createColumnHeaderLabel(configPanel, "Left Click Action", xCoords[4] + 25) -- add 25 to line up correctly
-	createColumnHeaderLabel(configPanel, "Right Click Action", xCoords[5] + 25) -- add 25 to line up correctly
+	createConfigColumnHeaderLabel(configPanel, "Show", xCoords[1])
+	createConfigColumnHeaderLabel(configPanel, "Name", xCoords[2])
+	createConfigColumnHeaderLabel(configPanel, "Text", xCoords[3])
+	createConfigColumnHeaderLabel(configPanel, "Left Click Action", xCoords[4] + 25) -- add 25 to line up correctly
+	createConfigColumnHeaderLabel(configPanel, "Right Click Action", xCoords[5] + 25) -- add 25 to line up correctly
 
 	for i = 1, table.getn(yCoords) do
 		-- Create enabled on/off check boxes
@@ -135,14 +140,14 @@ function LoadQuikTells()
 		-- Create text entry fields
 
 		-- Create left button click actions
-		createChannelDropdown(configPanel, i, xCoords[4], yCoords[i])
+		createConfigChannelDropdown(configPanel, i, xCoords[4], yCoords[i])
 
 		-- Create right button click actions
-		createChannelDropdown(configPanel, i, xCoords[5], yCoords[i])
+		createConfigChannelDropdown(configPanel, i, xCoords[5], yCoords[i])
 	end
 end
 
-function createColumnHeaderLabel(parentFrame, name, xCoord)
+function createConfigColumnHeaderLabel(parentFrame, name, xCoord)
 	local header = parentFrame:CreateFontString("ARTWORK")
 	header:SetPoint("TOPLEFT", parentFrame, "TOPLEFT", xCoord, -50)
 	header:SetFontObject("GameFontNormal")
@@ -153,7 +158,7 @@ local channelOptions = {"Say", "Yell", "Raid", "Emote", "Custom"}
 local emoteOptions = {"Emote Dance", "Emote Salute"}
 local customOptions = {"DMB Pull"}
 
-function createChannelDropdown(parentFrame, buttonNumber, xCoord, yCoord)
+function createConfigChannelDropdown(parentFrame, buttonNumber, xCoord, yCoord)
 	local dropDown = CreateFrame("FRAME", "WPDemoDropDown", parentFrame, "UIDropDownMenuTemplate")
 	dropDown:SetPoint("TOPLEFT", parentFrame, "TOPLEFT", xCoord, yCoord)
 	UIDropDownMenu_SetWidth(dropDown, 100)

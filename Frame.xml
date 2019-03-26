@@ -272,7 +272,6 @@
 		<Scripts>
 			<OnLoad>
 				self:RegisterForDrag("LeftButton");
-				QuikTells_OnClick();
 				LoadQuikTells();
 			</OnLoad>
 			<OnDragStop>
