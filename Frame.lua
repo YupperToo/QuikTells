@@ -94,22 +94,14 @@ function Button33_OnClick()
 	end
 end
 
--- TODO: Save this value in config
-local open=0;
 function QuikTells_OnClick()
-	if (open==0) then 
-		TellButtons:Hide();
-		open=1;
+	if (QuikTellsShowButtons == true) then 
+		TellButtons:Hide()
+		QuikTellsShowButtons = false
 	else
-		TellButtons:Show();
-		open=0;
+		TellButtons:Show()
+		QuikTellsShowButtons = true
 	end	
-end
-
-function LoadQuikTells()
-	-- TODO: Create button frames
-	QuikTells_OnClick()
-	LoadConfigPanel()
 end
 
 local defaultTells =   {{"Enabled", "Hi", "Hello everyone!", "Say", "Raid"},
@@ -122,6 +114,25 @@ local defaultTells =   {{"Enabled", "Hi", "Hello everyone!", "Say", "Raid"},
 						{"Enabled", "Pet", "Oh, so cute!", "Say", "Emote Pet"},
 						{"Enabled", "Dance", "Dance Party!", "Say", "Emote Dance"},
 						{"Enabled", "Pull", "Pulling in 10!", "Raid", "DMB Pull"}}
+
+function LoadQuikTells()
+	if (QuikTellsSavedVariableTable == nil) then
+		QuikTellsSavedVariableTable = defaultTells
+	end
+
+	-- TODO: Create button frames
+
+	-- Show the button bar(s) on launch?
+	if (QuikTellsShowButtons == nil) then
+		QuikTellsShowButtons = true
+	else
+		if (QuikTellsShowButtons == true) then
+			QuikTells_OnClick()
+		end
+	end
+	
+	LoadConfigPanel()
+end
 
 local configXCoords = {20, 70, 130, 320, 445}
 local headerYCoord = -55
@@ -146,9 +157,9 @@ function LoadConfigPanel()
 	createConfigColumnHeaderLabel(configPanel, "Left Click Action", configXCoords[4] + 20) -- add 20 to line up correctly
 	createConfigColumnHeaderLabel(configPanel, "Right Click Action", configXCoords[5] + 20) -- add 20 to line up correctly
 
-	for i = 1, table.getn(defaultTells) do
+	for i = 1, table.getn(QuikTellsSavedVariableTable) do
 		local yCoord = firstYCoord + (i * -25)
-		local currentValues = defaultTells[i] -- TODO: use saved values if they exist
+		local currentValues = QuikTellsSavedVariableTable[i]
 
 		-- Create enabled on/off check boxes
 		local checked = currentValues[1]
