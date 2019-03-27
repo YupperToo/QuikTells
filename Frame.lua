@@ -4,6 +4,7 @@
 -- Create Date  	: 02.23.2012
 -- Last Updated		: 03.09.2019
 
+-- TODO: Refactor all these!
 function Button23_OnClick()
 	if (GetMouseButtonClicked() == "RightButton") then
 		SendChatMessage("Hello all :)", "YELL")
@@ -93,7 +94,7 @@ function Button33_OnClick()
 	end
 end
 
--- End Groups
+-- TODO: Save this value in config
 local open=0;
 function QuikTells_OnClick()
 	if (open==0) then 
@@ -106,12 +107,13 @@ function QuikTells_OnClick()
 end
 
 function LoadQuikTells()
+	-- TODO: Create button frames
 	QuikTells_OnClick()
 	LoadConfigPanel()
 end
 
-local xCoords = {20, 70, 200, 325, 450}
-local yCoords = {-75, -100, -125, -150, -175, -200, -225, -250, -275, -300, -325, -350}
+local configXCoords = {20, 70, 130, 270, 395}
+local configYCoords = {-75, -100, -125, -150, -175, -200, -225, -250, -275, -300, -325, -350}
 function LoadConfigPanel()
 	-- Create config screen
 	local configPanel = CreateFrame("Frame", "QuikTellsOptions", InterfaceOptionsFramePanelContainer)
@@ -126,24 +128,27 @@ function LoadConfigPanel()
 	title:SetText("QuikTells")
 
 	-- Create column headers
-	createConfigColumnHeaderLabel(configPanel, "Show", xCoords[1])
-	createConfigColumnHeaderLabel(configPanel, "Name", xCoords[2])
-	createConfigColumnHeaderLabel(configPanel, "Text", xCoords[3])
-	createConfigColumnHeaderLabel(configPanel, "Left Click Action", xCoords[4] + 25) -- add 25 to line up correctly
-	createConfigColumnHeaderLabel(configPanel, "Right Click Action", xCoords[5] + 25) -- add 25 to line up correctly
+	createConfigColumnHeaderLabel(configPanel, "Show", configXCoords[1])
+	createConfigColumnHeaderLabel(configPanel, "Name", configXCoords[2])
+	createConfigColumnHeaderLabel(configPanel, "Text", configXCoords[3])
+	createConfigColumnHeaderLabel(configPanel, "Left Click Action", configXCoords[4] + 20) -- add 20 to line up correctly
+	createConfigColumnHeaderLabel(configPanel, "Right Click Action", configXCoords[5] + 20) -- add 20 to line up correctly
 
-	for i = 1, table.getn(yCoords) do
+	for i = 1, table.getn(configYCoords) do
 		-- Create enabled on/off check boxes
+		createConfigCheckBox(configPanel, i, configXCoords[1], configYCoords[i])
 
 		-- Create button name entry fields
+		createConfigTextEntry(configPanel, i, 50, configXCoords[2], configYCoords[i], 50)
 
 		-- Create text entry fields
+		createConfigTextEntry(configPanel, i, 100, configXCoords[3], configYCoords[i], 150)
 
 		-- Create left button click actions
-		createConfigChannelDropdown(configPanel, i, xCoords[4], yCoords[i])
+		createConfigChannelDropdown(configPanel, i, configXCoords[4], configYCoords[i] + 3) -- add 3 to line up correctly
 
 		-- Create right button click actions
-		createConfigChannelDropdown(configPanel, i, xCoords[5], yCoords[i])
+		createConfigChannelDropdown(configPanel, i, configXCoords[5], configYCoords[i] + 3) -- add 3 to line up correctly
 	end
 end
 
@@ -154,9 +159,30 @@ function createConfigColumnHeaderLabel(parentFrame, name, xCoord)
 	header:SetText(name)
 end
 
+function createConfigCheckBox(parentFrame, buttonNumber, xCoord, yCoord)
+	local checkBoxButton = CreateFrame("CheckButton", "checkBox" .. buttonNumber, parentFrame, "ChatConfigCheckButtonTemplate")
+	checkBoxButton:SetPoint("TOPLEFT", xCoord, yCoord)
+	checkBoxButton:SetWidth(20)
+	checkBoxButton:SetHeight(20)
+	checkBoxButton:SetScript("OnClick", 
+	  function()
+		--TODO: Save the value
+	  end
+	)
+end
+
+function createConfigTextEntry(parentFrame, buttonNumber, width, xCoord, yCoord, width)
+	local textEntry = CreateFrame("EditBox", "textEntry" .. buttonNumber, parentFrame, "InputBoxTemplate")
+	textEntry:SetPoint("TOPLEFT", parentFrame, "TOPLEFT", xCoord, yCoord)
+	textEntry:SetFontObject("GameFontNormal")
+	textEntry:SetWidth(width)
+	textEntry:SetHeight(20)
+	textEntry:SetText("text here") -- TODO: Get save value to display here
+end
+
 local channelOptions = {"Say", "Yell", "Raid", "Emote", "Custom"}
 local emoteOptions = {"Emote Dance", "Emote Salute"}
-local customOptions = {"DMB Pull"}
+local customOptions = {"DMB Pull", "Reload UI"}
 
 function createConfigChannelDropdown(parentFrame, buttonNumber, xCoord, yCoord)
 	local dropDown = CreateFrame("FRAME", "WPDemoDropDown", parentFrame, "UIDropDownMenuTemplate")
