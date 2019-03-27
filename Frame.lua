@@ -112,8 +112,20 @@ function LoadQuikTells()
 	LoadConfigPanel()
 end
 
-local configXCoords = {20, 70, 130, 270, 395}
-local configYCoords = {-75, -100, -125, -150, -175, -200, -225, -250, -275, -300, -325, -350}
+local defaultTells =   {{"Enabled", "Hi", "Hello everyone!", "Say", "Raid"},
+						{"Enabled", "Bye", "Goodbye all!", "Say", "Raid"},
+						{"Enabled", "Thx", "Thank you!", "Say", "Raid"},
+						{"Enabled", "LOL", "LOL!", "Say", "Raid"},
+						{"Enabled", "Add", "Focus fire on Add", "Say", "Raid"},
+						{"Enabled", "Main", "Focus fire on Main", "Say", "Raid"},
+						{"Enabled", "Salute", "Props to you", "Say", "Emote Salute"},
+						{"Enabled", "Pet", "Oh, so cute!", "Say", "Emote Pet"},
+						{"Enabled", "Dance", "Dance Party!", "Say", "Emote Dance"},
+						{"Enabled", "Pull", "Pulling in 10!", "Raid", "DMB Pull"}}
+
+local configXCoords = {20, 70, 130, 320, 445}
+local headerYCoord = -55
+local firstYCoord = -50
 function LoadConfigPanel()
 	-- Create config screen
 	local configPanel = CreateFrame("Frame", "QuikTellsOptions", InterfaceOptionsFramePanelContainer)
@@ -128,71 +140,81 @@ function LoadConfigPanel()
 	title:SetText("QuikTells")
 
 	-- Create column headers
-	createConfigColumnHeaderLabel(configPanel, "Show", configXCoords[1])
+	createConfigColumnHeaderLabel(configPanel, "Show", configXCoords[1] - 5)
 	createConfigColumnHeaderLabel(configPanel, "Name", configXCoords[2])
 	createConfigColumnHeaderLabel(configPanel, "Text", configXCoords[3])
 	createConfigColumnHeaderLabel(configPanel, "Left Click Action", configXCoords[4] + 20) -- add 20 to line up correctly
 	createConfigColumnHeaderLabel(configPanel, "Right Click Action", configXCoords[5] + 20) -- add 20 to line up correctly
 
-	for i = 1, table.getn(configYCoords) do
+	for i = 1, table.getn(defaultTells) do
+		local yCoord = firstYCoord + (i * -25)
+		local currentValues = defaultTells[i] -- TODO: use saved values if they exist
+
 		-- Create enabled on/off check boxes
-		createConfigCheckBox(configPanel, i, configXCoords[1], configYCoords[i])
+		local checked = currentValues[1]
+		createConfigCheckBox(configPanel, i, configXCoords[1], yCoord, checked == "Enabled")
 
 		-- Create button name entry fields
-		createConfigTextEntry(configPanel, i, 50, configXCoords[2], configYCoords[i], 50)
+		local buttonName = currentValues[2]
+		createConfigTextEntry(configPanel, i, 50, configXCoords[2], yCoord, 50, buttonName)
 
 		-- Create text entry fields
-		createConfigTextEntry(configPanel, i, 100, configXCoords[3], configYCoords[i], 150)
+		local textValue = currentValues[3]
+		createConfigTextEntry(configPanel, i, 100, configXCoords[3], yCoord, 200, textValue)
 
 		-- Create left button click actions
-		createConfigChannelDropdown(configPanel, i, configXCoords[4], configYCoords[i] + 3) -- add 3 to line up correctly
+		local leftClick = currentValues[4]
+		createConfigChannelDropdown(configPanel, i, configXCoords[4], yCoord + 3, leftClick) -- add 3 to line up correctly
 
 		-- Create right button click actions
-		createConfigChannelDropdown(configPanel, i, configXCoords[5], configYCoords[i] + 3) -- add 3 to line up correctly
+		local rightClick = currentValues[5]
+		createConfigChannelDropdown(configPanel, i, configXCoords[5], yCoord + 3, rightClick) -- add 3 to line up correctly
 	end
 end
 
 function createConfigColumnHeaderLabel(parentFrame, name, xCoord)
 	local header = parentFrame:CreateFontString("ARTWORK")
-	header:SetPoint("TOPLEFT", parentFrame, "TOPLEFT", xCoord, -50)
+	header:SetPoint("TOPLEFT", parentFrame, "TOPLEFT", xCoord, headerYCoord)
 	header:SetFontObject("GameFontNormal")
 	header:SetText(name)
 end
 
-function createConfigCheckBox(parentFrame, buttonNumber, xCoord, yCoord)
+function createConfigCheckBox(parentFrame, buttonNumber, xCoord, yCoord, enabled)
 	local checkBoxButton = CreateFrame("CheckButton", "checkBox" .. buttonNumber, parentFrame, "ChatConfigCheckButtonTemplate")
 	checkBoxButton:SetPoint("TOPLEFT", xCoord, yCoord)
 	checkBoxButton:SetWidth(20)
 	checkBoxButton:SetHeight(20)
-	checkBoxButton:SetScript("OnClick", 
-	  function()
+	checkBoxButton:SetHitRectInsets(0, 0, 0, 0)
+	checkBoxButton:SetChecked(enabled)
+	checkBoxButton:SetScript("OnClick", function(self)
 		--TODO: Save the value
-	  end
-	)
+	end)
 end
 
-function createConfigTextEntry(parentFrame, buttonNumber, width, xCoord, yCoord, width)
+function createConfigTextEntry(parentFrame, buttonNumber, width, xCoord, yCoord, width, currentValue)
 	local textEntry = CreateFrame("EditBox", "textEntry" .. buttonNumber, parentFrame, "InputBoxTemplate")
 	textEntry:SetPoint("TOPLEFT", parentFrame, "TOPLEFT", xCoord, yCoord)
-	textEntry:SetFontObject("GameFontNormal")
+	textEntry:SetFontObject("GameFontWhite")
 	textEntry:SetWidth(width)
 	textEntry:SetHeight(20)
-	textEntry:SetText("text here") -- TODO: Get save value to display here
+	textEntry:SetText(currentValue)
+	textEntry:SetScript("OnEnterPressed", function(self)
+		self:ClearFocus()
+		-- TODO: Save the value
+	end)
 end
 
-local channelOptions = {"Say", "Yell", "Raid", "Emote", "Custom"}
-local emoteOptions = {"Emote Dance", "Emote Salute"}
+local channelOptions = {"Say", "Yell", "Party", "Raid", "Emote", "Custom"}
+local emoteOptions = {"Emote Dance", "Emote Salute", "Emote Flirt", "Emote Pet"}
 local customOptions = {"DMB Pull", "Reload UI"}
 
-function createConfigChannelDropdown(parentFrame, buttonNumber, xCoord, yCoord)
+function createConfigChannelDropdown(parentFrame, buttonNumber, xCoord, yCoord, currentValue)
 	local dropDown = CreateFrame("FRAME", "WPDemoDropDown", parentFrame, "UIDropDownMenuTemplate")
 	dropDown:SetPoint("TOPLEFT", parentFrame, "TOPLEFT", xCoord, yCoord)
 	UIDropDownMenu_SetWidth(dropDown, 100)
-	UIDropDownMenu_SetText(dropDown, "Say") -- TODO: Get saved value to display here
+	UIDropDownMenu_SetText(dropDown, currentValue)
 	
-	-- Create and bind the initialization function to the dropdown menu
-	UIDropDownMenu_Initialize(dropDown, 
-	function(self, level, menuList)
+	UIDropDownMenu_Initialize(dropDown, function(self, level, menuList)
 		local info = UIDropDownMenu_CreateInfo()
 
 		if (level == 1) then
