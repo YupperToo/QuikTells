@@ -116,6 +116,7 @@ local defaultTells =   {{"Enabled", "Hi", "Hello everyone!", "Say", "Raid"},
 						{"Enabled", "Pull", "Pulling in 10!", "Raid", "DMB Pull"}}
 
 function LoadQuikTells()
+	-- Get the saved values or set the defaults
 	if (QuikTellsSavedVariableTable == nil) then
 		QuikTellsSavedVariableTable = defaultTells
 	end
@@ -131,6 +132,7 @@ function LoadQuikTells()
 		end
 	end
 	
+	-- Load the config panel
 	LoadConfigPanel()
 end
 
