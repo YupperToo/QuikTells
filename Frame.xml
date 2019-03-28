@@ -1,5 +1,4 @@
 ﻿<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
-	<Script file="Frame.lua" />
 	<Frame name="TellButtons" parent="UIParent" toplevel="true" movable="true" enableMouse="true">
 		<Size>
 			<AbsDimension x="526" y="30" />
@@ -272,7 +271,6 @@
 		<Scripts>
 			<OnLoad>
 				self:RegisterForDrag("LeftButton");
-				LoadQuikTells();
 			</OnLoad>
 			<OnDragStop>
 				self:StopMovingOrSizing();

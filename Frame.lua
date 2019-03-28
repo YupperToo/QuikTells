@@ -104,6 +104,37 @@ function QuikTells_OnClick()
 	end	
 end
 
+local loader = CreateFrame("Frame")
+loader:RegisterEvent("ADDON_LOADED")
+loader:SetScript("OnEvent", function(self, event, arg1)
+	if event == "ADDON_LOADED" and arg1 == "QuikTells" then
+		-- Get the saved values or set the defaults
+		if (QuikTellsSavedVariableTable == nil) then
+			print("QuikTells show buttons == nil")
+			QuikTellsSavedVariableTable = defaultTells
+		end
+
+		-- TODO: Create button frames
+
+		-- Show the button bar(s) on launch?
+		if (QuikTellsShowButtons == nil) then
+			QuikTellsShowButtons = true
+		else
+			if (QuikTellsShowButtons == true) then 
+				TellButtons:Show()
+			else
+				TellButtons:Hide()
+			end
+		end
+	
+		-- Load the config panel
+		LoadConfigPanel()
+
+		-- Unregister so we don't get more notifications
+		self:UnregisterEvent("ADDON_LOADED")
+	end
+end)
+
 local defaultTells =   {{"Enabled", "Hi", "Hello everyone!", "Say", "Raid"},
 						{"Enabled", "Bye", "Goodbye all!", "Say", "Raid"},
 						{"Enabled", "Thx", "Thank you!", "Say", "Raid"},
@@ -114,27 +145,6 @@ local defaultTells =   {{"Enabled", "Hi", "Hello everyone!", "Say", "Raid"},
 						{"Enabled", "Pet", "Oh, so cute!", "Say", "Emote Pet"},
 						{"Enabled", "Dance", "Dance Party!", "Say", "Emote Dance"},
 						{"Enabled", "Pull", "Pulling in 10!", "Raid", "DMB Pull"}}
-
-function LoadQuikTells()
-	-- Get the saved values or set the defaults
-	if (QuikTellsSavedVariableTable == nil) then
-		QuikTellsSavedVariableTable = defaultTells
-	end
-
-	-- TODO: Create button frames
-
-	-- Show the button bar(s) on launch?
-	if (QuikTellsShowButtons == nil) then
-		QuikTellsShowButtons = true
-	else
-		if (QuikTellsShowButtons == true) then
-			QuikTells_OnClick()
-		end
-	end
-	
-	-- Load the config panel
-	LoadConfigPanel()
-end
 
 local configXCoords = {20, 70, 130, 320, 445}
 local headerYCoord = -55

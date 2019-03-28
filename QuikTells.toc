@@ -1,8 +1,9 @@
 ## Author: MasterZeus
 ## Interface: 70300
 ## Title: QuikTells
-## SavedVariables: QuikTellsShowOnLaunch
+## SavedVariables: QuikTellsShowButtons
 ## SavedVariablesPerCharacter: QuikTellsSavedVariableTable
 ## Version: 1.0
 ## Notes: Based on Theodas's QuikEmtoes Addon which is based on Feli's Emote Button Leiste, this is a way to /s common phrases needed in the heat of battle.
+Frame.lua
 Frame.xml
