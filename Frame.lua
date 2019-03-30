@@ -110,9 +110,20 @@ loader:SetScript("OnEvent", function(self, event, arg1)
 	if event == "ADDON_LOADED" and arg1 == "QuikTells" then
 		-- Get the saved values or set the defaults
 		if (QuikTellsSavedVariableTable == nil) then
-			print("QuikTells show buttons == nil")
-			QuikTellsSavedVariableTable = defaultTells
+			QuikTellsSavedVariableTable = {
+				{"Enabled", "Hi", "Hello everyone!", "Say", "Raid"},
+				{"Enabled", "Bye", "Goodbye all!", "Say", "Raid"},
+				{"Enabled", "Thx", "Thank you!", "Say", "Raid"},
+				{"Enabled", "LOL", "LOL!", "Say", "Raid"},
+				{"Enabled", "Add", "Focus fire on Add", "Say", "Raid"},
+				{"Enabled", "Main", "Focus fire on Main", "Say", "Raid"},
+				{"Enabled", "Salute", "Props to you", "Say", "Emote Salute"},
+				{"Enabled", "Pet", "Oh, so cute!", "Say", "Emote Pet"},
+				{"Enabled", "Dance", "Dance Party!", "Say", "Emote Dance"},
+				{"Enabled", "Pull", "Pulling in 10!", "Raid", "DMB Pull"}}
 		end
+
+		-- TODO: Create hide/show button
 
 		-- TODO: Create button frames
 
@@ -135,20 +146,11 @@ loader:SetScript("OnEvent", function(self, event, arg1)
 	end
 end)
 
-local defaultTells =   {{"Enabled", "Hi", "Hello everyone!", "Say", "Raid"},
-						{"Enabled", "Bye", "Goodbye all!", "Say", "Raid"},
-						{"Enabled", "Thx", "Thank you!", "Say", "Raid"},
-						{"Enabled", "LOL", "LOL!", "Say", "Raid"},
-						{"Enabled", "Add", "Focus fire on Add", "Say", "Raid"},
-						{"Enabled", "Main", "Focus fire on Main", "Say", "Raid"},
-						{"Enabled", "Salute", "Props to you", "Say", "Emote Salute"},
-						{"Enabled", "Pet", "Oh, so cute!", "Say", "Emote Pet"},
-						{"Enabled", "Dance", "Dance Party!", "Say", "Emote Dance"},
-						{"Enabled", "Pull", "Pulling in 10!", "Raid", "DMB Pull"}}
-
 local configXCoords = {20, 70, 130, 320, 445}
-local headerYCoord = -55
-local firstYCoord = -50
+local configHeaderYCoord = -55
+local configFirstYCoord = -50 -- Note: first y coord will include ycoordspace because arrays start at 1
+local configYCoordSpacing = -25
+
 function LoadConfigPanel()
 	-- Create config screen
 	local configPanel = CreateFrame("Frame", "QuikTellsOptions", InterfaceOptionsFramePanelContainer)
@@ -163,14 +165,14 @@ function LoadConfigPanel()
 	title:SetText("QuikTells")
 
 	-- Create column headers
-	createConfigColumnHeaderLabel(configPanel, "Show", configXCoords[1] - 5)
+	createConfigColumnHeaderLabel(configPanel, "Show", configXCoords[1] - 5) -- subtract 5 to line up correctly
 	createConfigColumnHeaderLabel(configPanel, "Name", configXCoords[2])
 	createConfigColumnHeaderLabel(configPanel, "Text", configXCoords[3])
 	createConfigColumnHeaderLabel(configPanel, "Left Click Action", configXCoords[4] + 20) -- add 20 to line up correctly
 	createConfigColumnHeaderLabel(configPanel, "Right Click Action", configXCoords[5] + 20) -- add 20 to line up correctly
 
 	for i = 1, table.getn(QuikTellsSavedVariableTable) do
-		local yCoord = firstYCoord + (i * -25)
+		local yCoord = configFirstYCoord + (i * configYCoordSpacing)
 		local currentValues = QuikTellsSavedVariableTable[i]
 
 		-- Create enabled on/off check boxes
@@ -197,7 +199,7 @@ end
 
 function createConfigColumnHeaderLabel(parentFrame, name, xCoord)
 	local header = parentFrame:CreateFontString("ARTWORK")
-	header:SetPoint("TOPLEFT", parentFrame, "TOPLEFT", xCoord, headerYCoord)
+	header:SetPoint("TOPLEFT", parentFrame, "TOPLEFT", xCoord, configHeaderYCoord)
 	header:SetFontObject("GameFontNormal")
 	header:SetText(name)
 end
@@ -228,7 +230,7 @@ function createConfigTextEntry(parentFrame, buttonNumber, width, xCoord, yCoord,
 end
 
 local channelOptions = {"Say", "Yell", "Party", "Raid", "Emote", "Custom"}
-local emoteOptions = {"Emote Dance", "Emote Salute", "Emote Flirt", "Emote Pet"}
+local emoteOptions = {"Emote Dance", "Emote Salute", "Emote Flirt", "Emote Pet", "Emote Sit", "Emote Sleep"}
 local customOptions = {"DMB Pull", "Reload UI"}
 
 function createConfigChannelDropdown(parentFrame, buttonNumber, xCoord, yCoord, currentValue)
