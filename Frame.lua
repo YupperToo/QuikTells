@@ -124,6 +124,7 @@ loader:SetScript("OnEvent", function(self, event, arg1)
 		end
 
 		-- TODO: Create hide/show button
+		LoadHideShowPanel()
 
 		-- TODO: Create button frames
 
@@ -145,6 +146,32 @@ loader:SetScript("OnEvent", function(self, event, arg1)
 		self:UnregisterEvent("ADDON_LOADED")
 	end
 end)
+
+function LoadHideShowPanel()
+	local hideShowPanel = CreateFrame("Frame", "QuikTellsHideShowFrame", UIParent)
+	hideShowPanel:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+	hideShowPanel:SetWidth(100)
+	hideShowPanel:SetHeight(30)
+	hideShowPanel:SetBackdrop({	bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark", 
+								edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", 
+								tile = true, tileSize = 16, edgeSize = 16, 
+								insets = { left = 0, right = 0, top = 0, bottom = 0}})
+	hideShowPanel:SetBackdropColor(0,0,0,1)
+	hideShowPanel:RegisterForDrag("LeftButton")
+	hideShowPanel:SetMovable(true)
+	hideShowPanel:EnableMouse(true)
+	hideShowPanel:SetScript("OnDragStart", hideShowPanel.StartMoving)
+	hideShowPanel:SetScript("OnDragStop", hideShowPanel.StopMovingOrSizing)
+
+	local hideShowButton = CreateFrame("Button", "QuikTellsHideShowButton", hideShowPanel, "UIPanelButtonTemplate")
+	hideShowButton:SetText("QuikTells")
+	hideShowButton:SetPoint("TOPLEFT", hideShowPanel, "TOPLEFT", 3, -3)
+	hideShowButton:SetWidth(94)
+	hideShowButton:SetHeight(22)
+	hideShowButton:SetScript("OnClick", function(self)
+		QuikTells_OnClick()
+	end)
+end
 
 local configXCoords = {20, 70, 130, 320, 445}
 local configHeaderYCoord = -55
