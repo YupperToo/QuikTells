@@ -110,7 +110,7 @@ loader:SetScript("OnEvent", function(self, event, arg1)
 				{"Enabled", "Salute", "Props to you", "Say", "Emote Salute"},
 				{"Enabled", "Pet", "Oh, so cute!", "Say", "Emote Pet"},
 				{"Enabled", "Dance", "Dance Party!", "Say", "Emote Dance"},
-				{"Enabled", "Pull", "Pulling in 10!", "Raid", "DMB Pull"}}
+				{"Enabled", "Pull", "Pulling in 10!", "Raid", "Custom Pull"}}
 		end
 
 		-- Create hide/show button
@@ -213,8 +213,8 @@ function LoadTellPanel()
 			tellButton:SetPoint("TOPLEFT", tellButtonPanel, "TOPLEFT", xCoord + tellButtonXSpacing, -3)
 			tellButton:SetWidth(tellButtonWidth)
 			tellButton:SetHeight(22)
-			tellButton:SetScript("OnClick", function(self)
-				-- TODO: Do something
+			tellButton:SetScript("OnClick", function(self, button)
+				TellButton_OnClick(i, button)
 			end)
 			enabledButtonNumber = enabledButtonNumber + 1
 		end
@@ -233,9 +233,42 @@ function QuikTells_OnClick()
 	end	
 end
 
+function TellButton_OnClick(buttonNumber, mouseButtonName)
+	local currentValues = QuikTellsSavedVariableTable[buttonNumber]
+	local actionString = "None"
+	if (mouseButtonName == "LeftButton") then
+		actionString = currentValues[4]
+	else 
+		if (mouseButtonName == "RightButton") then
+			actionString = currentValues[5]
+		end
+	end
+
+	-- Check for pull countdown action
+	if (actionString == "Pull In 10") then
+		DEFAULT_CHAT_FRAME.editBox:SetText("/pull 10") 
+		ChatEdit_SendText(DEFAULT_CHAT_FRAME.editBox, 0)
+	else
+		-- Check for reload ui
+		if (actionString == "Reload UI") then
+			DEFAULT_CHAT_FRAME.editBox:SetText("/reload ui") 
+			ChatEdit_SendText(DEFAULT_CHAT_FRAME.editBox, 0)
+		else
+			-- Check for emote
+			local emoteIndex = string.find(actionString, "Emote", 1)
+			if (emoteIndex ~= nil) then
+				DoEmote(string.sub(actionString, emoteIndex + 1))
+			else
+				-- Must be a text
+				SendChatMessage(currentValues[3], string.upper(actionString))
+			end
+		end
+	end
+end
+
 local configXCoords = {20, 70, 130, 320, 445}
 local configHeaderYCoord = -55
-local configFirstYCoord = -50 -- Note: first y coord will include ycoordspace because arrays start at 1
+local configFirstYCoord = -50 -- Note: first y coord will include configYCoordSpacing because arrays start at 1 in LUA
 local configYCoordSpacing = -25
 
 function LoadConfigPanel()
@@ -318,7 +351,7 @@ end
 
 local channelOptions = {"Say", "Yell", "Party", "Raid", "Emote", "Custom"}
 local emoteOptions = {"Emote Dance", "Emote Salute", "Emote Flirt", "Emote Pet", "Emote Sit", "Emote Sleep"}
-local customOptions = {"DMB Pull", "Reload UI"}
+local customOptions = {"Pull In 10", "Reload UI"}
 
 function createConfigChannelDropdown(parentFrame, buttonNumber, xCoord, yCoord, currentValue)
 	local dropDown = CreateFrame("FRAME", "WPDemoDropDown", parentFrame, "UIDropDownMenuTemplate")
