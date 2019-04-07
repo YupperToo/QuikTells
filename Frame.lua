@@ -94,16 +94,6 @@ function Button33_OnClick()
 	end
 end
 
-function QuikTells_OnClick()
-	if (QuikTellsShowButtons == true) then 
-		TellButtons:Hide()
-		QuikTellsShowButtons = false
-	else
-		TellButtons:Show()
-		QuikTellsShowButtons = true
-	end	
-end
-
 local loader = CreateFrame("Frame")
 loader:RegisterEvent("ADDON_LOADED")
 loader:SetScript("OnEvent", function(self, event, arg1)
@@ -123,10 +113,11 @@ loader:SetScript("OnEvent", function(self, event, arg1)
 				{"Enabled", "Pull", "Pulling in 10!", "Raid", "DMB Pull"}}
 		end
 
-		-- TODO: Create hide/show button
+		-- Create hide/show button
 		LoadHideShowPanel()
 
-		-- TODO: Create button frames
+		-- Create button frames
+		LoadTellPanel()
 
 		-- Show the button bar(s) on launch?
 		if (QuikTellsShowButtons == nil) then
@@ -171,6 +162,75 @@ function LoadHideShowPanel()
 	hideShowButton:SetScript("OnClick", function(self)
 		QuikTells_OnClick()
 	end)
+end
+
+local tellButtonWidth = 50
+local tellButtonXSpacing = 2
+local tellButtonPanel = CreateFrame("Frame", "QuikTellsTellButtonFrame", UIParent)
+
+function LoadTellPanel()
+	local numberOfEnabledButtons = 0
+	for i = 1, table.getn(QuikTellsSavedVariableTable) do
+		local currentValues = QuikTellsSavedVariableTable[i]
+		if currentValues[1] == "Enabled" then
+			numberOfEnabledButtons = numberOfEnabledButtons + 1
+		end
+	end
+
+	local panelWidth = (numberOfEnabledButtons * tellButtonWidth) + (numberOfEnabledButtons  * tellButtonXSpacing) + tellButtonXSpacing
+	tellButtonPanel:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+	tellButtonPanel:SetWidth(panelWidth)
+	tellButtonPanel:SetHeight(30)
+	tellButtonPanel:SetBackdrop({	bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark", 
+									edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", 
+									tile = true, tileSize = 16, edgeSize = 16, 
+									insets = { left = 0, right = 0, top = 0, bottom = 0}})
+	tellButtonPanel:SetBackdropColor(0,0,0,1)
+	tellButtonPanel:RegisterForDrag("LeftButton")
+	tellButtonPanel:SetMovable(true)
+	tellButtonPanel:EnableMouse(true)
+	tellButtonPanel:SetScript("OnDragStart", tellButtonPanel.StartMoving)
+	tellButtonPanel:SetScript("OnDragStop", tellButtonPanel.StopMovingOrSizing)
+
+	-- Show the button bar(s) on launch?
+	if (QuikTellsShowButtons == nil) then
+		QuikTellsShowButtons = true
+	else
+		if (QuikTellsShowButtons == true) then 
+			tellButtonPanel:Show()
+		else
+			tellButtonPanel:Hide()
+		end
+	end
+
+	local enabledButtonNumber = 0
+	for i = 1, table.getn(QuikTellsSavedVariableTable) do
+		local currentValues = QuikTellsSavedVariableTable[i]
+		if currentValues[1] == "Enabled" then
+			local xCoord = (enabledButtonNumber * tellButtonWidth) + (enabledButtonNumber * tellButtonXSpacing)
+			local tellButton = CreateFrame("Button", "QuikTellsTellButton" .. i, tellButtonPanel, "UIPanelButtonTemplate")
+			tellButton:SetText(currentValues[2])
+			tellButton:SetPoint("TOPLEFT", tellButtonPanel, "TOPLEFT", xCoord + tellButtonXSpacing, -3)
+			tellButton:SetWidth(tellButtonWidth)
+			tellButton:SetHeight(22)
+			tellButton:SetScript("OnClick", function(self)
+				-- TODO: Do something
+			end)
+			enabledButtonNumber = enabledButtonNumber + 1
+		end
+	end
+end
+
+function QuikTells_OnClick()
+	if (QuikTellsShowButtons == true) then 
+		TellButtons:Hide()
+		tellButtonPanel:Hide()
+		QuikTellsShowButtons = false
+	else
+		TellButtons:Show()
+		tellButtonPanel:Show()
+		QuikTellsShowButtons = true
+	end	
 end
 
 local configXCoords = {20, 70, 130, 320, 445}
