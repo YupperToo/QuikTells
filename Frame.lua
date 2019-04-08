@@ -100,6 +100,8 @@ loader:SetScript("OnEvent", function(self, event, arg1)
 	if event == "ADDON_LOADED" and arg1 == "QuikTells" then
 		-- Get the saved values or set the defaults
 		if (QuikTellsSavedVariableTable == nil) then
+			-- TODO: Move these somewhere more convenient
+			-- TODO: Add new rows to saved values when new rows are added to defaults
 			QuikTellsSavedVariableTable = {
 				{"Enabled", "Hi", "Hello everyone!", "Say", "Raid"},
 				{"Enabled", "Bye", "Goodbye all!", "Say", "Raid"},
@@ -110,7 +112,12 @@ loader:SetScript("OnEvent", function(self, event, arg1)
 				{"Enabled", "Salute", "Props to you", "Say", "Emote Salute"},
 				{"Enabled", "Pet", "Oh, so cute!", "Say", "Emote Pet"},
 				{"Enabled", "Dance", "Dance Party!", "Say", "Emote Dance"},
-				{"Enabled", "Pull", "Pulling in 10!", "Raid", "Custom Pull"}}
+				{"Enabled", "Pull", "Pulling in 10!", "Raid", "Pull In 10"},
+				{"Disabled", "Inter", "Interupt the caster!", "Yell", "Raid"},
+				{"Disabled", "Reload", "BRB in 1 min", "Raid", "Reload UI"},
+				{"Disabled", "Chick", "Chickin!", "Say", "Emote Chicken"},
+				{"Disabled", "Flirt", "How you doin'?", "Say", "Emote Flirt"},
+				{"Disabled", "Cheer", "Yeah!!!!!", "Say", "Emote Cheer"}}
 		end
 
 		-- Create hide/show button
@@ -213,7 +220,8 @@ function LoadTellPanel()
 			tellButton:SetPoint("TOPLEFT", tellButtonPanel, "TOPLEFT", xCoord + tellButtonXSpacing, -3)
 			tellButton:SetWidth(tellButtonWidth)
 			tellButton:SetHeight(22)
-			tellButton:SetScript("OnClick", function(self, button)
+			tellButton:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+			tellButton:SetScript("OnClick", function(self, button, down)
 				TellButton_OnClick(i, button)
 			end)
 			enabledButtonNumber = enabledButtonNumber + 1
@@ -255,9 +263,10 @@ function TellButton_OnClick(buttonNumber, mouseButtonName)
 			ChatEdit_SendText(DEFAULT_CHAT_FRAME.editBox, 0)
 		else
 			-- Check for emote
-			local emoteIndex = string.find(actionString, "Emote", 1)
+			local emoteIndex = string.find(actionString, "Emote ", 1)
 			if (emoteIndex ~= nil) then
-				DoEmote(string.sub(actionString, emoteIndex + 1))
+				local emote = string.sub(actionString, emoteIndex + 6)
+				DoEmote(emote)
 			else
 				-- Must be a text
 				SendChatMessage(currentValues[3], string.upper(actionString))
@@ -266,6 +275,7 @@ function TellButton_OnClick(buttonNumber, mouseButtonName)
 	end
 end
 
+-- TODO: Reload button bar when config closed or values change
 local configXCoords = {20, 70, 130, 320, 445}
 local configHeaderYCoord = -55
 local configFirstYCoord = -50 -- Note: first y coord will include configYCoordSpacing because arrays start at 1 in LUA
@@ -296,24 +306,19 @@ function LoadConfigPanel()
 		local currentValues = QuikTellsSavedVariableTable[i]
 
 		-- Create enabled on/off check boxes
-		local checked = currentValues[1]
-		createConfigCheckBox(configPanel, i, configXCoords[1], yCoord, checked == "Enabled")
+		createConfigCheckBox(configPanel, i, configXCoords[1], yCoord, currentValues)
 
 		-- Create button name entry fields
-		local buttonName = currentValues[2]
-		createConfigTextEntry(configPanel, i, 50, configXCoords[2], yCoord, 50, buttonName)
+		createConfigTextEntry(configPanel, i, 50, configXCoords[2], yCoord, 50, currentValues, 2)
 
 		-- Create text entry fields
-		local textValue = currentValues[3]
-		createConfigTextEntry(configPanel, i, 100, configXCoords[3], yCoord, 200, textValue)
+		createConfigTextEntry(configPanel, i, 100, configXCoords[3], yCoord, 200, currentValues, 3)
 
 		-- Create left button click actions
-		local leftClick = currentValues[4]
-		createConfigChannelDropdown(configPanel, i, configXCoords[4], yCoord + 3, leftClick) -- add 3 to line up correctly
+		createConfigChannelDropdown(configPanel, i, configXCoords[4], yCoord + 3, currentValues, 4) -- add 3 to line up correctly
 
 		-- Create right button click actions
-		local rightClick = currentValues[5]
-		createConfigChannelDropdown(configPanel, i, configXCoords[5], yCoord + 3, rightClick) -- add 3 to line up correctly
+		createConfigChannelDropdown(configPanel, i, configXCoords[5], yCoord + 3, currentValues, 5) -- add 3 to line up correctly
 	end
 end
 
@@ -324,40 +329,44 @@ function createConfigColumnHeaderLabel(parentFrame, name, xCoord)
 	header:SetText(name)
 end
 
-function createConfigCheckBox(parentFrame, buttonNumber, xCoord, yCoord, enabled)
+function createConfigCheckBox(parentFrame, buttonNumber, xCoord, yCoord, currentValues)
 	local checkBoxButton = CreateFrame("CheckButton", "checkBox" .. buttonNumber, parentFrame, "ChatConfigCheckButtonTemplate")
 	checkBoxButton:SetPoint("TOPLEFT", xCoord, yCoord)
 	checkBoxButton:SetWidth(20)
 	checkBoxButton:SetHeight(20)
 	checkBoxButton:SetHitRectInsets(0, 0, 0, 0)
-	checkBoxButton:SetChecked(enabled)
+	checkBoxButton:SetChecked(currentValues[1] == "Enabled")
 	checkBoxButton:SetScript("OnClick", function(self)
-		--TODO: Save the value
+		if (self:GetChecked() == true) then
+			currentValues[1] = "Enabled"
+		else
+			currentValues[1] = "Disabled"
+		end
 	end)
 end
 
-function createConfigTextEntry(parentFrame, buttonNumber, width, xCoord, yCoord, width, currentValue)
+function createConfigTextEntry(parentFrame, buttonNumber, width, xCoord, yCoord, width, currentValues, index)
 	local textEntry = CreateFrame("EditBox", "textEntry" .. buttonNumber, parentFrame, "InputBoxTemplate")
 	textEntry:SetPoint("TOPLEFT", parentFrame, "TOPLEFT", xCoord, yCoord)
 	textEntry:SetFontObject("GameFontWhite")
 	textEntry:SetWidth(width)
 	textEntry:SetHeight(20)
-	textEntry:SetText(currentValue)
-	textEntry:SetScript("OnEnterPressed", function(self)
-		self:ClearFocus()
-		-- TODO: Save the value
+	textEntry:SetText(currentValues[index])
+	textEntry:SetScript("OnLeave", function(self, motion)
+		currentValues[index] = self:GetText()
 	end)
 end
 
+-- TODO: Move these somewhere more convenient
 local channelOptions = {"Say", "Yell", "Party", "Raid", "Emote", "Custom"}
-local emoteOptions = {"Emote Dance", "Emote Salute", "Emote Flirt", "Emote Pet", "Emote Sit", "Emote Sleep"}
+local emoteOptions = {"Emote Cheer", "Emote Chicken", "Emote Dance", "Emote Flirt", "Emote Hi", "Emote Pet", "Emote Salute", "Emote Sit", "Emote Sleep"}
 local customOptions = {"Pull In 10", "Reload UI"}
 
-function createConfigChannelDropdown(parentFrame, buttonNumber, xCoord, yCoord, currentValue)
+function createConfigChannelDropdown(parentFrame, buttonNumber, xCoord, yCoord, currentValues, index)
 	local dropDown = CreateFrame("FRAME", "WPDemoDropDown", parentFrame, "UIDropDownMenuTemplate")
 	dropDown:SetPoint("TOPLEFT", parentFrame, "TOPLEFT", xCoord, yCoord)
 	UIDropDownMenu_SetWidth(dropDown, 100)
-	UIDropDownMenu_SetText(dropDown, currentValue)
+	UIDropDownMenu_SetText(dropDown, currentValues[index])
 	
 	UIDropDownMenu_Initialize(dropDown, function(self, level, menuList)
 		local info = UIDropDownMenu_CreateInfo()
@@ -398,7 +407,8 @@ function createConfigChannelDropdown(parentFrame, buttonNumber, xCoord, yCoord, 
 	end)
 
 	function dropDown:SetValue(newValue)
-		UIDropDownMenu_SetText(dropDown, newValue) -- TODO: Save the choosen value
+		currentValues[index] = newValue
+		UIDropDownMenu_SetText(dropDown, newValue)
 		CloseDropDownMenus()
 	end
 end
