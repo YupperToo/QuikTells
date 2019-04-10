@@ -2,7 +2,7 @@
 -- Last Modified By	: MasterZeus
 -- Addon			: QuikTells
 -- Create Date  	: 02.23.2012
--- Last Updated		: 03.09.2019
+-- Last Updated		: 04.09.2019
 
 -- TODO: Refactor all these!
 function Button23_OnClick()
@@ -129,12 +129,6 @@ loader:SetScript("OnEvent", function(self, event, arg1)
 		-- Show the button bar(s) on launch?
 		if (QuikTellsShowButtons == nil) then
 			QuikTellsShowButtons = true
-		else
-			if (QuikTellsShowButtons == true) then 
-				TellButtons:Show()
-			else
-				TellButtons:Hide()
-			end
 		end
 	
 		-- Load the config panel
@@ -231,11 +225,9 @@ end
 
 function QuikTells_OnClick()
 	if (QuikTellsShowButtons == true) then 
-		TellButtons:Hide()
 		tellButtonPanel:Hide()
 		QuikTellsShowButtons = false
 	else
-		TellButtons:Show()
 		tellButtonPanel:Show()
 		QuikTellsShowButtons = true
 	end	
