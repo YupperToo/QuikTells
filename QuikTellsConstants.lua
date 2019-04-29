@@ -1,6 +1,6 @@
 ﻿-- Author			: Yupyup - Area 52
 -- Addon			: QuikTells
--- Last Updated		: 04.09.2019
+-- Last Updated		: 04.28.2019
 
 QuikTellsConfig = {
 	quikTellsTableEnabledColumn = 1,
@@ -50,7 +50,7 @@ QuikTellsConfig = {
 	configRowHeight = 20,
 	configDropDownWidth = 100,
 		
-	channelOptions = {"Say", "Yell", "Party", "Raid", "Emote", "Custom"},
+	channelOptions = {"Say", "Yell", "Party", "Raid", "Guild", "Emote", "Custom"},
 	emoteOptions = {
 		"Emote Cheer", "Emote Chicken", "Emote Dance", "Emote Flirt", "Emote Hi", 
 		"Emote Pet", "Emote Salute", "Emote Sit", "Emote Sleep"

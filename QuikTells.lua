@@ -2,7 +2,7 @@
 -- Author			: Yupyup - Area 52
 -- Addon			: QuikTells
 -- Create Date  	: 02.23.2012
--- Last Updated		: 04.09.2019
+-- Last Updated		: 04.28.2019
 
 -- The button panel seen in the UI.  Needs to be global so we can redraw it when needed.
 local tellButtonPanel = CreateFrame("Frame", "QuikTellsTellButtonFrame", UIParent)
@@ -63,8 +63,19 @@ function QuikTells_LoadHideShowPanel()
 	hideShowButton:SetWidth(c.hideShowButtonPanelWidth - (c.hideShowButtonPanelBuffer * 2))
 	hideShowButton:SetHeight(c.hideShowButtonPanelHeight - (c.hideShowButtonPanelBuffer * 2))
 	hideShowButton:SetScript("OnClick", function(self)
-		QuikTells_QuikTells_OnClick()
+		QuikTells_HideShowButton_OnClick()
 	end)
+end
+
+function QuikTells_ReloadTellPanel()
+	-- TODO: Figure out how to make it not move
+	-- local top = tellButtonPanel:GetTop()
+	-- local left = tellButtonPanel:GetLeft()
+	-- print(top)
+	tellButtonPanel:Hide()
+	tellButtonPanel = CreateFrame("Frame", "QuikTellsTellButtonFrame", UIParent)
+	-- tellButtonPanel:SetPoint("TOPLEFT", UIParent, "TOPLEFT", top, left)
+	QuikTells_LoadTellPanel()
 end
 
 function QuikTells_LoadTellPanel()
@@ -77,6 +88,7 @@ function QuikTells_LoadTellPanel()
 	end
 
 	local panelWidth = (numberOfEnabledButtons * c.tellButtonWidth) + (numberOfEnabledButtons  * c.tellButtonXSpacing) + c.tellButtonXSpacing
+	tellButtonPanel:Hide()
 	tellButtonPanel:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
 	tellButtonPanel:SetWidth(panelWidth)
 	tellButtonPanel:SetHeight(c.tellButtonFrameHeight)
@@ -91,15 +103,18 @@ function QuikTells_LoadTellPanel()
 	tellButtonPanel:SetScript("OnDragStart", tellButtonPanel.StartMoving)
 	tellButtonPanel:SetScript("OnDragStop", tellButtonPanel.StopMovingOrSizing)
 
+	-- TODO: Hide when entering pet battles
+	-- TODO: Hide when entering vehicles?
+
 	-- Show the button bar(s) on launch?
 	if (QuikTellsShowButtons == nil) then
 		QuikTellsShowButtons = true
+	end
+
+	if (QuikTellsShowButtons == true) then 
+		tellButtonPanel:Show()
 	else
-		if (QuikTellsShowButtons == true) then 
-			tellButtonPanel:Show()
-		else
-			tellButtonPanel:Hide()
-		end
+		tellButtonPanel:Hide()
 	end
 
 	local enabledButtonNumber = 0
@@ -121,7 +136,7 @@ function QuikTells_LoadTellPanel()
 	end
 end
 
-function QuikTells_QuikTells_OnClick()
+function QuikTells_HideShowButton_OnClick()
 	if (QuikTellsShowButtons == true) then 
 		tellButtonPanel:Hide()
 		QuikTellsShowButtons = false
@@ -227,6 +242,9 @@ function QuikTells_createConfigCheckBox(parentFrame, buttonNumber, xCoord, yCoor
 		else
 			currentValues[c.quikTellsTableEnabledColumn] = c.quikTellsRowDisabled
 		end
+
+		-- Reload the tool bar now that a button was hidden or shown
+		QuikTells_ReloadTellPanel()
 	end)
 end
 
@@ -239,6 +257,11 @@ function QuikTells_createConfigTextEntry(parentFrame, buttonNumber, width, xCoor
 	textEntry:SetText(currentValues[index])
 	textEntry:SetScript("OnLeave", function(self, motion)
 		currentValues[index] = self:GetText()
+
+		-- If this is the name column, reload the tool bar as a name was changed
+		if (index == c.quikTellsTableNameColumn) then
+			QuikTells_ReloadTellPanel()
+		end
 	end)
 end
 
@@ -252,7 +275,7 @@ function QuikTells_createConfigChannelDropdown(parentFrame, buttonNumber, xCoord
 		local info = UIDropDownMenu_CreateInfo()
 
 		if (level == 1) then
-			for i = 1, table.getn(channelOptions) do
+			for i = 1, table.getn(c.channelOptions) do
 				info.text = c.channelOptions[i]
 				info.arg1 = c.channelOptions[i]
 				info.menuList = c.channelOptions[i]
