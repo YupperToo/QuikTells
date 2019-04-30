@@ -6,6 +6,18 @@
 
 -- The button panel seen in the UI.  Needs to be global so we can redraw it when needed.
 local tellButtonPanel = CreateFrame("Frame", "QuikTellsTellButtonFrame", UIParent)
+local tellButtonArray = {	CreateFrame("Button", "QuikTellsTellButton1", tellButtonPanel, "UIPanelButtonTemplate"),
+							CreateFrame("Button", "QuikTellsTellButton2", tellButtonPanel, "UIPanelButtonTemplate"),
+							CreateFrame("Button", "QuikTellsTellButton3", tellButtonPanel, "UIPanelButtonTemplate"),
+							CreateFrame("Button", "QuikTellsTellButton4", tellButtonPanel, "UIPanelButtonTemplate"),
+							CreateFrame("Button", "QuikTellsTellButton5", tellButtonPanel, "UIPanelButtonTemplate"),
+							CreateFrame("Button", "QuikTellsTellButton6", tellButtonPanel, "UIPanelButtonTemplate"),
+							CreateFrame("Button", "QuikTellsTellButton7", tellButtonPanel, "UIPanelButtonTemplate"),
+							CreateFrame("Button", "QuikTellsTellButton8", tellButtonPanel, "UIPanelButtonTemplate"),
+							CreateFrame("Button", "QuikTellsTellButton9", tellButtonPanel, "UIPanelButtonTemplate"),
+							CreateFrame("Button", "QuikTellsTellButton10", tellButtonPanel, "UIPanelButtonTemplate"),
+							CreateFrame("Button", "QuikTellsTellButton11", tellButtonPanel, "UIPanelButtonTemplate"),
+							CreateFrame("Button", "QuikTellsTellButton12", tellButtonPanel, "UIPanelButtonTemplate")}
 
 -- Constants defintion
 local c = QuikTellsConfig
@@ -68,13 +80,10 @@ function QuikTells_LoadHideShowPanel()
 end
 
 function QuikTells_ReloadTellPanel()
-	-- TODO: Figure out how to make it not move
-	-- local top = tellButtonPanel:GetTop()
-	-- local left = tellButtonPanel:GetLeft()
-	-- print(top)
+	for i = 1, table.getn(tellButtonArray) do
+		tellButtonArray[i]:Hide()
+	end
 	tellButtonPanel:Hide()
-	tellButtonPanel = CreateFrame("Frame", "QuikTellsTellButtonFrame", UIParent)
-	-- tellButtonPanel:SetPoint("TOPLEFT", UIParent, "TOPLEFT", top, left)
 	QuikTells_LoadTellPanel()
 end
 
@@ -91,7 +100,7 @@ function QuikTells_LoadTellPanel()
 	tellButtonPanel:Hide()
 	tellButtonPanel:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
 	tellButtonPanel:SetWidth(panelWidth)
-	tellButtonPanel:SetHeight(c.tellButtonFrameHeight)
+	tellButtonPanel:SetHeight(c.tellButtonFrameHeight + c.tellButtonYSpacing)
 	tellButtonPanel:SetBackdrop({	bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark", 
 									edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", 
 									tile = true, tileSize = 16, edgeSize = 16, 
@@ -122,7 +131,8 @@ function QuikTells_LoadTellPanel()
 		local currentValues = QuikTellsSavedVariableTable[i]
 		if currentValues[c.quikTellsTableEnabledColumn] == c.quikTellsRowEnabled then
 			local xCoord = (enabledButtonNumber * c.tellButtonWidth) + (enabledButtonNumber * c.tellButtonXSpacing)
-			local tellButton = CreateFrame("Button", "QuikTellsTellButton" .. i, tellButtonPanel, "UIPanelButtonTemplate")
+			local tellButton = tellButtonArray[i]
+			tellButton:Show()
 			tellButton:SetText(currentValues[c.quikTellsTableNameColumn])
 			tellButton:SetPoint("TOPLEFT", tellButtonPanel, "TOPLEFT", xCoord + c.tellButtonXSpacing, -c.tellButtonYSpacing)
 			tellButton:SetWidth(c.tellButtonWidth)
