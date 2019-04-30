@@ -17,7 +17,10 @@ local tellButtonArray = {	CreateFrame("Button", "QuikTellsTellButton1", tellButt
 							CreateFrame("Button", "QuikTellsTellButton9", tellButtonPanel, "UIPanelButtonTemplate"),
 							CreateFrame("Button", "QuikTellsTellButton10", tellButtonPanel, "UIPanelButtonTemplate"),
 							CreateFrame("Button", "QuikTellsTellButton11", tellButtonPanel, "UIPanelButtonTemplate"),
-							CreateFrame("Button", "QuikTellsTellButton12", tellButtonPanel, "UIPanelButtonTemplate")}
+							CreateFrame("Button", "QuikTellsTellButton12", tellButtonPanel, "UIPanelButtonTemplate"),
+							CreateFrame("Button", "QuikTellsTellButton13", tellButtonPanel, "UIPanelButtonTemplate"),
+							CreateFrame("Button", "QuikTellsTellButton14", tellButtonPanel, "UIPanelButtonTemplate"),
+							CreateFrame("Button", "QuikTellsTellButton15", tellButtonPanel, "UIPanelButtonTemplate")}
 
 -- Constants defintion
 local c = QuikTellsConfig
