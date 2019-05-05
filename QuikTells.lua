@@ -303,7 +303,7 @@ function QuikTells_createConfigChannelDropdown(parentFrame, buttonNumber, xCoord
 			end
 		else 
 			if (menuList == "Emote") then 
-				for i = 1, table.getn(emoteOptions) do
+				for i = 1, table.getn(c.emoteOptions) do
 					info.text = c.emoteOptions[i]
 					info.arg1 = c.emoteOptions[i]	
 					info.func = self.SetValue
@@ -311,7 +311,7 @@ function QuikTells_createConfigChannelDropdown(parentFrame, buttonNumber, xCoord
 				end
 			else 
 				if (menuList == "Custom") then
-					for i = 1, table.getn(customOptions) do
+					for i = 1, table.getn(c.customOptions) do
 						info.text = c.customOptions[i]
 						info.arg1 = c.customOptions[i]	
 						info.func = self.SetValue
