@@ -1,5 +1,5 @@
 ## Author: MasterZeus
-## Interface: 70300
+## Interface: 80200
 ## Title: QuikTells
 ## SavedVariables: QuikTellsShowButtons
 ## SavedVariablesPerCharacter: QuikTellsSavedVariableTable

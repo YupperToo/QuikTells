@@ -34,8 +34,8 @@ QuikTellsConfig = {
 	hideShowButtonPanelHeight = 30,
 	hideShowButtonPanelBuffer = 3,
 		
-	tellButtonWidth = 50,
-	tellButtonFrameHeight = 30,
+	tellButtonWidth = 40,
+	tellButtonFrameHeight = 26,
 	tellButtonHeight = 22,
 	tellButtonXSpacing = 2,
 	tellButtonYSpacing = 3,

@@ -5,7 +5,7 @@
 -- Last Updated		: 04.28.2019
 
 -- The button panel seen in the UI.  Needs to be global so we can redraw it when needed.
-local tellButtonPanel = CreateFrame("Frame", "QuikTellsTellButtonFrame", UIParent)
+local tellButtonPanel = CreateFrame("Frame", "QuikTellsTellButtonFrame", WorldFrame)
 local tellButtonArray = {	CreateFrame("Button", "QuikTellsTellButton1", tellButtonPanel, "UIPanelButtonTemplate"),
 							CreateFrame("Button", "QuikTellsTellButton2", tellButtonPanel, "UIPanelButtonTemplate"),
 							CreateFrame("Button", "QuikTellsTellButton3", tellButtonPanel, "UIPanelButtonTemplate"),
@@ -57,8 +57,9 @@ quikTellsLoader:SetScript("OnEvent", function(self, event, arg1)
 end)
 
 function QuikTells_LoadHideShowPanel()
-	local hideShowPanel = CreateFrame("Frame", "QuikTellsHideShowFrame", UIParent)
-	hideShowPanel:SetPoint("CENTER", UIParent, "CENTER", 0, c.hideShowButtonPanelHeight)
+	local hideShowPanel = CreateFrame("Frame", "QuikTellsHideShowFrame", WorldFrame)
+	hideShowPanel:ClearAllPoints()
+	hideShowPanel:SetPoint("CENTER", WorldFrame, "CENTER", 0, c.hideShowButtonPanelHeight)
 	hideShowPanel:SetWidth(c.hideShowButtonPanelWidth)
 	hideShowPanel:SetHeight(c.hideShowButtonPanelHeight)
 	hideShowPanel:SetBackdrop({	bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark", 
@@ -101,7 +102,8 @@ function QuikTells_LoadTellPanel()
 
 	local panelWidth = (numberOfEnabledButtons * c.tellButtonWidth) + (numberOfEnabledButtons  * c.tellButtonXSpacing) + c.tellButtonXSpacing
 	tellButtonPanel:Hide()
-	tellButtonPanel:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+	tellButtonPanel:ClearAllPoints()
+	tellButtonPanel:SetPoint("CENTER", WorldFrame, "CENTER", 0, 0)
 	tellButtonPanel:SetWidth(panelWidth)
 	tellButtonPanel:SetHeight(c.tellButtonFrameHeight + c.tellButtonYSpacing)
 	tellButtonPanel:SetBackdrop({	bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark", 
@@ -134,9 +136,11 @@ function QuikTells_LoadTellPanel()
 		local currentValues = QuikTellsSavedVariableTable[i]
 		if currentValues[c.quikTellsTableEnabledColumn] == c.quikTellsRowEnabled then
 			local xCoord = (enabledButtonNumber * c.tellButtonWidth) + (enabledButtonNumber * c.tellButtonXSpacing)
+			local buttonText = currentValues[c.quikTellsTableNameColumn]
 			local tellButton = tellButtonArray[i]
 			tellButton:Show()
-			tellButton:SetText(currentValues[c.quikTellsTableNameColumn])
+			tellButton:SetText(buttonText)
+			tellButton:SetNormalFontObject("GameFontNormalSmall")
 			tellButton:SetPoint("TOPLEFT", tellButtonPanel, "TOPLEFT", xCoord + c.tellButtonXSpacing, -c.tellButtonYSpacing)
 			tellButton:SetWidth(c.tellButtonWidth)
 			tellButton:SetHeight(c.tellButtonFrameHeight - (2 * c.tellButtonYSpacing))
