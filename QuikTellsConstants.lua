@@ -13,7 +13,7 @@ QuikTellsConfig = {
 	quikTellsRowDisabled = "Disabled",
 
 	quikTellsTableDefaultVariables = {
-		{"Enabled", "Hi", "Hello everyone!", "Say", "Raid"},
+		{"Enabled", "Wave", "Hello everyone!", "Say", "Raid"},
 		{"Enabled", "Bye", "Goodbye all!", "Say", "Raid"},
 		{"Enabled", "Thx", "Thank you!", "Say", "Raid"},
 		{"Enabled", "LOL", "LOL!", "Say", "Raid"},
@@ -52,7 +52,7 @@ QuikTellsConfig = {
 		
 	channelOptions = {"Say", "Yell", "Party", "Raid", "Guild", "Emote", "Custom"},
 	emoteOptions = {
-		"Emote Cheer", "Emote Chicken", "Emote Dance", "Emote Flirt", "Emote Hi", "Emote Joke",
+		"Emote Cheer", "Emote Chicken", "Emote Dance", "Emote Flirt", "Emote Hi", "Emote Joke", "Emote LOL",
 		"Emote Pet", "Emote Salute", "Emote Sit", "Emote Sleep", "Emote Train"
 	},
 	customOptions = {"Pull In 10", "Reload UI"}
