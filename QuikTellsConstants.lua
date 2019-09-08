@@ -53,7 +53,7 @@ QuikTellsConfig = {
 	channelOptions = {"Say", "Yell", "Party", "Raid", "Guild", "Emote", "Custom"},
 	emoteOptions = {
 		"Emote Cheer", "Emote Chicken", "Emote Dance", "Emote Flirt", "Emote Hi", "Emote Joke", "Emote LOL",
-		"Emote Pet", "Emote Salute", "Emote Sit", "Emote Sleep", "Emote Train"
+		"Emote Pet", "Emote Salute", "Emote Sit", "Emote Sleep", "Emote Sorry", "Emote Thanks", "Emote Train", "Emote Wave"
 	},
 	customOptions = {"Pull In 10", "Reload UI"}
 }
