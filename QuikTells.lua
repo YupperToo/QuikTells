@@ -1,11 +1,11 @@
-﻿-- Based On   		: QuikEmotes from Theodas
+-- Based On   		: QuikEmotes from Theodas
 -- Author			: Yupyup - Area 52
 -- Addon			: QuikTells
 -- Create Date  	: 02.23.2012
 -- Last Updated		: 04.28.2019
 
 -- The button panel seen in the UI.  Needs to be global so we can redraw it when needed.
-local tellButtonPanel = CreateFrame("Frame", "QuikTellsTellButtonFrame", WorldFrame)
+local tellButtonPanel = CreateFrame("Frame", "QuikTellsTellButtonFrame", WorldFrame, BackdropTemplateMixin and "BackdropTemplate")
 local tellButtonArray = {	CreateFrame("Button", "QuikTellsTellButton1", tellButtonPanel, "UIPanelButtonTemplate"),
 							CreateFrame("Button", "QuikTellsTellButton2", tellButtonPanel, "UIPanelButtonTemplate"),
 							CreateFrame("Button", "QuikTellsTellButton3", tellButtonPanel, "UIPanelButtonTemplate"),
@@ -57,7 +57,7 @@ quikTellsLoader:SetScript("OnEvent", function(self, event, arg1)
 end)
 
 function QuikTells_LoadHideShowPanel()
-	local hideShowPanel = CreateFrame("Frame", "QuikTellsHideShowFrame", WorldFrame)
+	local hideShowPanel = CreateFrame("Frame", "QuikTellsHideShowFrame", WorldFrame, BackdropTemplateMixin and "BackdropTemplate")
 	hideShowPanel:ClearAllPoints()
 	hideShowPanel:SetPoint("CENTER", WorldFrame, "CENTER", 0, c.hideShowButtonPanelHeight)
 	hideShowPanel:SetWidth(c.hideShowButtonPanelWidth)

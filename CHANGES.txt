@@ -1,0 +1,26 @@
+lightweight tag 4edc72771acc4cc27e7ed9c01959e4e17600b668 1.1
+Author:	YupperToo <chad.hine@me.com>
+Date:	Mon Sep 2 15:46:20 2019 -0400
+
+commit 4edc72771acc4cc27e7ed9c01959e4e17600b668
+Author: YupperToo <chad.hine@me.com>
+Date:   Mon Sep 2 15:46:20 2019 -0400
+
+    Update QuikTellsConstants.lua
+    
+    Added LOL and updated hi to wave
+
+commit 9ec70473c1d209f6734e8aab5c6a0a618a291229
+Author: YupperToo <chad.hine@me.com>
+Date:   Mon Aug 19 20:07:40 2019 -0400
+
+    Updated verions
+    
+    Removed lua errors, smallened the text
+
+commit b3efba6db1d1922953eff05fbe36efdcf1dc7e66
+Author: YupperToo <chad.hine@me.com>
+Date:   Mon Aug 19 19:05:36 2019 -0400
+
+    Screenshots
+
