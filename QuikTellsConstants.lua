@@ -50,7 +50,7 @@ QuikTellsConfig = {
 	configRowHeight = 20,
 	configDropDownWidth = 100,
 		
-	channelOptions = {"Say", "Yell", "Party", "Raid", "Guild", "Emote", "Custom"},
+	channelOptions = {"Say", "Yell", "Party", "Raid", "INSTANCE_CHAT", "Guild", "Emote", "Custom"},
 	emoteOptions = {
 		"Emote Apologize", "Emote Blush", "Emote Cheer", "Emote Chicken", "Emote Cough", "Emote Cry", "Emote Dance", "Emote Flirt", "Emote Hello", "Emote Joke", "Emote Laugh", 
 		"Emote Pat", "Emote Salute", "Emote Sit", "Emote Sleep", "Emote Spit", "Emote Thank", "Emote Train", "Emote Wave"
