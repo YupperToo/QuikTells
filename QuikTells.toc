@@ -3,7 +3,7 @@
 ## Title: QuikTells
 ## SavedVariables: QuikTellsShowButtons
 ## SavedVariablesPerCharacter: QuikTellsSavedVariableTable
-## Version: 1.5
+## Version: 1.6
 ## Notes: Based on Theodas's QuikEmotes Addon which is based on Feli's Emote Button Leiste, this is a way to /s common phrases needed in the heat of battle.
 
 QuikTellsConstants.lua
